@@ -1,9 +1,5 @@
 package HomeWork3;
 
-<<<<<<< HEAD
-public class MainClass {
-    public static void main(String[] args) {
-=======
 import java.util.Random;
 import java.util.Scanner;
 
@@ -96,7 +92,6 @@ public class MainClass {
             System.out.println(resultStrArr);
             currTry++;
         } while (true);
->>>>>>> develop
 
     }
 }
