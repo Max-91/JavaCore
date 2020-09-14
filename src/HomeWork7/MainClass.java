@@ -1,5 +1,7 @@
 package HomeWork7;
 
+import java.util.Scanner;
+
 public class MainClass {
     /*  1. Расширить задачу про котов и тарелки с едой
     2. Сделать так, чтобы в тарелке с едой не могло получиться отрицательного количества еды (например, в миске 10 еды, а кот пытается покушать 15-20)
@@ -9,6 +11,30 @@ public class MainClass {
     6. Добавить в тарелку метод, с помощью которого можно было бы добавлять еду в тарелку
     */
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int countFood;
+        Cat[] cats = {
+                new Cat("Barsik1", 9),
+                new Cat("Barsik2", 15),
+                new Cat("Barsik3", 17),
+                new Cat("Barsik4", 7),
+                new Cat("Barsik5", 8),
+                new Cat("Barsik6", 15),
+        };
+        do {
+            System.out.println("Введите кол-во еды:");
+            countFood=scanner.nextInt();
+        }
+        while (!(countFood > 0));
 
+        Plate plate = new Plate(countFood);
+        for (Cat cat : cats) {
+            cat.eat(plate);
+        }
+        System.out.println("Информация о сытости кошек:");
+        for (Cat cat : cats) {
+            cat.info();
+        }
     }
+
 }
