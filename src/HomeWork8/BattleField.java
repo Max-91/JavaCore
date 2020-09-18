@@ -27,11 +27,25 @@ public class BattleField extends JPanel {
                 int cellY = e.getY() / cellHeight;
                 if (!Logic.isFinished) { // Если игра не закончилась
                     Logic.humanTurn(cellX, cellY); // Запуск процедуры записи хода пользователя
+                    repaint();
                     if (Logic.isFinished) {
                         // Действие при завершение игры
+                        String msgText= new String();
+                        if (Logic.typeWin==Logic.WIN_HUM) {
+                            msgText="Выиграл пользователь";
+                        }
+                        if (Logic.typeWin==Logic.WIN_AI) {
+                            msgText="Выиграл компьютер";
+                        }
+                        if (Logic.typeWin==Logic.WIN_NOBODY) {
+                            msgText="Ничья";
+                        }
+                        JOptionPane.showMessageDialog(BattleField.this,
+                                msgText, "Игра завершена", JOptionPane.INFORMATION_MESSAGE);
+                        repaint();
+
                     }
                 }
-                repaint();
 
             }
         });
@@ -66,6 +80,25 @@ public class BattleField extends JPanel {
             int x = i * cellWidth;
             g.drawLine(x, 0, x, getHeight());
         }
+        // Прорисовка победной линии
+        if ((Logic.typeWin==Logic.WIN_HUM) || (Logic.typeWin==Logic.WIN_AI)) {
+            for (int i = 0; i < winningLength; i++) {
+                if (Logic.winDir==Logic.WIN_LINE_HOR) {
+                    highlightCell(g, Logic.winCellX+i, Logic.winCellY);
+                }
+                if (Logic.winDir==Logic.WIN_LINE_VER) {
+                    highlightCell(g, Logic.winCellX, Logic.winCellY+i);
+                }
+                if (Logic.winDir==Logic.WIN_LINE_D1) {
+                    highlightCell(g, Logic.winCellX+i, Logic.winCellY-i);
+                }
+                if (Logic.winDir==Logic.WIN_LINE_D2) {
+                    highlightCell(g, Logic.winCellX+i, Logic.winCellY+i);
+                }
+            }
+        }
+
+
         // Прорисовка Х и О
         for (int i = 0; i < Logic.SIZE; i++) {
             for (int j = 0; j < Logic.SIZE; j++) {
@@ -78,21 +111,29 @@ public class BattleField extends JPanel {
                     drawO(g, j, i);
                 }
             }
-
         }
 
     }
+
     // Нарисовать крестик
     private void drawX(Graphics g, int cellX, int cellY) {
         ((Graphics2D) g).setStroke(new BasicStroke(5));
         g.setColor(Color.MAGENTA);
         g.drawLine(cellX * cellWidth + 5, cellY * cellHeight + 5, (cellX + 1) * cellWidth - 5, (cellY + 1) * cellHeight - 5);
-        g.drawLine(cellX * cellWidth + 5, (cellY+1) * cellHeight - 5, (cellX + 1) * cellWidth - 5, cellY * cellHeight + 5);
+        g.drawLine(cellX * cellWidth + 5, (cellY + 1) * cellHeight - 5, (cellX + 1) * cellWidth - 5, cellY * cellHeight + 5);
     }
+
     // Нарисовать нолик
     private void drawO(Graphics g, int cellX, int cellY) {
         ((Graphics2D) g).setStroke(new BasicStroke(5));
         g.setColor(Color.BLUE);
-        g.drawOval(cellX * cellWidth + 5, cellY * cellHeight + 5,  cellWidth - 10,  cellHeight - 10);
+        g.drawOval(cellX * cellWidth + 5, cellY * cellHeight + 5, cellWidth - 10, cellHeight - 10);
     }
+    // Закрасить ячейку цветом (для отображения победной линии)
+    private void highlightCell(Graphics g, int cellX, int cellY) {
+        g.setColor(Color.GREEN);
+        g.fillRect(cellX * cellWidth+1, cellY * cellHeight+1, cellWidth-1, cellHeight-1);
+    }
+
+
 }

@@ -11,30 +11,44 @@ public class Logic {
     static final char DOT_O = 'O';
     static final char DOT_EMPTY = '.';
 
+    static final int WIN_LINE_HOR = 0; // Линия победы горизонтальная (вправо)
+    static final int WIN_LINE_VER = 1; // Линия победы вертикальная (вниз)
+    static final int WIN_LINE_D1 = 2; //  Линия победы по диагонали вниз-вправо
+    static final int WIN_LINE_D2 = 3; //  Линия победы по диагонали вверх-вправо
+
+    static final int WIN_HUM = 1; // Выиграл пользователь
+    static final int WIN_AI = 2; // Выиграл ПК
+    static final int WIN_NOBODY = 3; // Ничья
+
     static char[][] map;
 
     static Scanner sc = new Scanner(System.in);
     static Random random = new Random();
     static boolean isFinished;
+    static int typeWin; // 0 - нет победы, 1 - выиграл пользователь, 2 - ПК, 3 - ничья
+    static int winCellX; // номер ячейки победы по X (начало линии)
+    static int winCellY; // номер ячейки победы по Y (начало линии)
+    static int winDir;  // направление победной линии: WIN_*
+
 
     private static void go() {
         isFinished = true;
         if (checkWin(DOT_X)) {
-            System.out.println("Вы победили! Поздравляем!");
+            typeWin=WIN_HUM;
             return;
         }
         if (isFull()) {
-            System.out.println("Ничья");
+            typeWin=WIN_NOBODY;
             return;
         }
 
         aiTurn();
         if (checkWin(DOT_O)) {
-            System.out.println("Компьютер победил.");
+            typeWin=WIN_AI;
             return;
         }
         if (isFull()) {
-            System.out.println("Ничья");
+            typeWin=WIN_NOBODY;
             return;
         }
         isFinished = false;
@@ -43,6 +57,7 @@ public class Logic {
 
     public static void initMap() { // Создания поля
         map = new char[SIZE][SIZE];
+        typeWin=0; // Нет победы
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
                 map[i][j] = DOT_EMPTY;
@@ -170,6 +185,22 @@ public class Logic {
             } else {
                 winD2 = false;
             }
+        }
+        if (winH || winV || winD1 || winD2) {
+            winCellX=x;
+            winCellY=y;
+        }
+        if (winH) {
+            winDir=WIN_LINE_HOR;
+        }
+        if (winV) {
+            winDir=WIN_LINE_VER;
+        }
+        if (winD1) {
+            winDir=WIN_LINE_D1;
+        }
+        if (winD2) {
+            winDir=WIN_LINE_D2;
         }
         return winH || winV || winD1 || winD2;
     }
